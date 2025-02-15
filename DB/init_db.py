@@ -37,7 +37,8 @@ def init_db():
                 'Social Media', 
                 'Blogging', 
                 'News', 
-                'Travel'
+                'Travel',
+                'Other'
             )),
             FOREIGN KEY (UID) REFERENCES Users(ID)
         )
