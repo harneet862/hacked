@@ -1,3 +1,16 @@
 .myenv
 .env
+# Ignore credential files
 credentials.json
+
+# Ignore SSL/TLS certificate and key files
+*.pem
+*.crt
+*.key
+*.csr
+*.p12
+
+# Ignore Python cache and virtual environment directories
+__pycache__/
+*.pyc
+venv/
