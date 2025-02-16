@@ -12,7 +12,7 @@ def insert_user(cursor, first_name, last_name, google_id):
 
 def insert_actual(cursor, url, start_time, end_time, date, category):
     query = """
-    INSERT INTO Visited ( URL, StartTime, EndTime, Date, Category)
+    INSERT INTO Actual ( URL, StartTime, EndTime, Date, Category)
     VALUES (?, ?, ?, ?, ?)
     """
     try:
@@ -20,6 +20,16 @@ def insert_actual(cursor, url, start_time, end_time, date, category):
     except sqlite3.IntegrityError as e:
         print(f"Error inserting visited entry: {e}")
 
+def insert_expected(cursor, title, start_time, end_time, date, category):
+    query = """
+    INSERT INTO Expected ( EVENT_TITLE, StartTime, EndTime, Date, Category)
+    VALUES (?, ?, ?, ?, ?)
+    """
+    try:
+        cursor.execute(query, (title, start_time, end_time, date, category))
+    except sqlite3.IntegrityError as e:
+        print(f"Error inserting visited entry: {e}")
+        
 def get_total_time_per_category_per_day(cursor, date):
     query = """
     SELECT 
