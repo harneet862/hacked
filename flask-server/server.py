@@ -12,7 +12,16 @@ import uuid
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all domains on all routes
-  
+
+
+@app.route('/calendar', methods=['POST'])
+def create_expected_data():
+    
+    # data = request.get_json()
+    # start_time = data.get('start_time')
+    # end_time = data.get('end_time')
+    # title = data.get('title')
+
 
 @app.route('/api/chrome_extension/insertvalue', methods=['POST'])
 def handle_chrome_extension_data():
@@ -38,7 +47,7 @@ def handle_frontend_data():
     # Process frontend data for this case it is entering the user info to make the account
     Fname = data.get('FirstName')
     Lname = data.get('LastName')
-    Email = data.get('Email')
+    Email = data.get('Email')  # dont need 
     gid = data.get('GoogleID') #make it a unique identifier
     DOB = data.get('DOB') # I dont think we need this 
     uid = str(uuid.uuid4()) # we dont need 
