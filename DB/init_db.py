@@ -22,6 +22,7 @@ def init_db():
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS Actual (
             URL TEXT NOT NULL,
+            TITLE TEXT NOT NULL,
             StartTime TEXT NOT NULL,
             EndTime TEXT NOT NULL,
             Date TEXT NOT NULL,

@@ -10,13 +10,13 @@ def insert_user(cursor, first_name, last_name, google_id):
     except sqlite3.IntegrityError as e:
         print(f"Error inserting user: {e}")
 
-def insert_actual(cursor, url, start_time, end_time, date, category):
+def insert_actual(cursor, url, title, start_time, end_time, date, category):
     query = """
-    INSERT INTO Actual ( URL, StartTime, EndTime, Date, Category)
-    VALUES (?, ?, ?, ?, ?)
+    INSERT INTO Actual ( URL, TITLE, StartTime, EndTime, Date, Category)
+    VALUES (?, ?, ?, ?, ?, ?)
     """
     try:
-        cursor.execute(query, (url, start_time, end_time, date, category))
+        cursor.execute(query, (url, title, start_time, end_time, date, category))
     except sqlite3.IntegrityError as e:
         print(f"Error inserting visited entry: {e}")
 
