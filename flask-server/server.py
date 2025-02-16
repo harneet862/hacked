@@ -59,9 +59,10 @@ def handle_frontend_data():
 @app.route('/api/expectedvsactual', methods=['GET'])
 def send_data():
     event_date = date.today()
-    DB.db_functions.get_user_expected(event_date)
+    ans = DB.db_functions.get_user_expected(event_date)
     # this should provide me with a set which has the values which are events which would be start_time, end_time, title, date
-    
+    for i in ans:
+        if 
     # so far we decided to send the info 
     # total info per day
     

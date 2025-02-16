@@ -21,6 +21,7 @@ def get_gemini_response_category(title, description):
     answer = response.candidates[0].content.parts[0].text.strip()
     return answer
 
+<<<<<<< HEAD
 def get_gemini_response_bool(url, des, event_title):
     model = genai.GenerativeModel("gemini-1.5-flask")
     response = model.generate_content(
@@ -28,3 +29,7 @@ def get_gemini_response_bool(url, des, event_title):
     )
     answer =  response.candidates[0].content.parts[0].text.strip()
     return answer
+=======
+
+print(get_gemini_response(title="breakfast", description="egss"))
+>>>>>>> 5d03f62fd05365efb3e380f836dbb059eb3bf915
