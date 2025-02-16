@@ -1,6 +1,7 @@
 import datetime
 import os.path
 import zoneinfo
+import requests
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -13,9 +14,6 @@ SCOPES = ["https://www.googleapis.com/auth/calendar.events.readonly"]
 
 
 def main():
-  """Shows basic usage of the Google Calendar API.
-  Prints the start and name of the next 10 events on the user's calendar.
-  """
   creds = None
   # The file token.json stores the user's access and refresh tokens, and is
   # created automatically when the authorization flow completes for the first
@@ -86,7 +84,10 @@ def main():
     if not events:
       print("No events found for today.")
       return
-
+    
+    # Create a list to store event data
+    event_data = []
+    
     # Prints the start, end, name of all events for today
     print(f"Events collected in events list: {len(events)}") # Debugging: Checking how many events in collected from Cal
     for event in events:
@@ -100,11 +101,34 @@ def main():
       # Get the time zone name (e.g. MDT, MST, PST)
       tz_name = start_dt.strftime("%Z") if start_dt.tzinfo else "Time Zone Unknown"
 
-      # Format the output string in 24-Hour format (e.g. "February 16, 2025 @ 18:00 MST")
-      start_formatted = start_dt.strftime(f"%B %d, %Y @ %H:%M {tz_name}")
-      end_formatted = end_dt.strftime(f"%B %d, %Y @ %H:%M {tz_name}")
+      # Format the date (e.g. "February 16, 2025")
+      date_formatted = start_dt.strftime("%B %d, %Y")
 
-      print(f"Start Time: {start_formatted} End Time: {end_formatted} Event Title: {event['summary']}")
+      # Format the output string in 24-Hour format (e.g. "February 16, 2025 @ 18:00 MST")
+      start_formatted = start_dt.strftime("%H:%M") +f" {tz_name}"
+      end_formatted = end_dt.strftime("%H:%M") +f" {tz_name}"
+
+      # print(f"Start Time: {start_formatted} End Time: {end_formatted} Event Title: {event['summary']}")
+
+      # Append the event data to the list
+      event_data.append({
+          "date": date_formatted,
+          "start_time": start_formatted,
+          "end_time": end_formatted,
+          "title": event["summary"]
+      })
+
+    print(event_data)
+    # Send the event data to the Flask server
+    url = "http://127.0.0.1:5000/calendar"  # TODO: CHECK THAT THIS IS CORRECT
+    response = requests.post(url, json=event_data)
+
+    # Check the response from the server
+    if response.status_code == 200:
+        print("Event data successfully sent to the Flask server.")
+    else:
+        print(f"Failed to send event data. Status code: {response.status_code}")
+        print(f"Response: {response.text}")
 
   except HttpError as error:
     print(f"An error occurred: {error}")
