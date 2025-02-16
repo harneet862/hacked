@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function Prod({ websites }) {
+function Prod({ websites, category }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -9,11 +9,11 @@ function Prod({ websites }) {
         onClick={() => setIsOpen(!isOpen)}
         className="w-full text-left bg-gray-800 px-4 py-2 text-white font-bold rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600"
       >
-        {isOpen ? 'Hide Productivity' : 'Show Productivity'}
+        {isOpen ? 'Hide ' + category : 'Show ' + category}
       </button>
       {isOpen && (
         <div className="mt-4">
-          <h1 className="text-2xl font-bold mb-4 text-center text-white">Productivity</h1>
+          <h1 className="text-2xl font-bold mb-4 text-center text-white">{category}</h1>
           <div className="overflow-auto h-60">
             <table className="w-full table-auto text-left">
               <thead>
