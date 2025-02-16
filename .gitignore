@@ -1,7 +1,8 @@
 .myenv
 .env
-# Ignore credential files
+# Ignore credential/token files
 credentials.json
+token.json
 
 # Ignore SSL/TLS certificate and key files
 *.pem
