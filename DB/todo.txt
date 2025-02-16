@@ -1,0 +1,4 @@
+total time spent on each category in one day
+total time spent on each category in one week
+total time spent on each unique website in one day
+total time spent on each unique website in one week
