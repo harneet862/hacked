@@ -82,15 +82,15 @@ def main():
     print("Total Time per Category per Day:")
     for row in get_total_time_per_category_per_day(cursor, date, 4):
         print(row)
-    print("\nTotal Time per Category per Week:")
-    for row in get_total_time_per_category_per_week(cursor, date, 4):
-        print(row)
-    print("\nTotal Time per Website per Day:")
-    for row in get_total_time_per_website_per_day(cursor, date, 4):
-        print(row)
-    print("\nTotal Time per Website per Week:")
-    for row in get_total_time_per_website_per_week(cursor, date, 4):
-        print(row)
+    # print("\nTotal Time per Category per Week:")
+    # for row in get_total_time_per_category_per_week(cursor, date, 4):
+    #     print(row)
+    # print("\nTotal Time per Website per Day:")
+    # for row in get_total_time_per_website_per_day(cursor, date, 4):
+    #     print(row)
+    # print("\nTotal Time per Website per Week:")
+    # for row in get_total_time_per_website_per_week(cursor, date, 4):
+    #     print(row)
     
     connection.close()
 
