@@ -133,10 +133,50 @@ function downloadLogs() {
     });
 }
 
-// Add a listener for a message from the popup to trigger download
+// Function to send stored logs to the Flask web app using Axios
+function sendLogsToServer() {
+    chrome.storage.local.get(['websiteLog'], (result) => {
+        let websiteLog = result.websiteLog || [];
+
+        const flaskAppUrl = 'http://127.0.0.1:5000/api/chrome_extension';
+        //const flaskAppUrl = 'http://127.0.0.1:5000/api/chrome_extension';
+
+        // Format the data for the Flask endpoint
+        const formattedData = websiteLog.map(log => ({
+            date: log.date,
+            start_time: log.startTime,
+            end_time: log.endTime,
+            title: log.title,
+            description: log.description,
+            url: log.url || 'No URL available' // Include the URL if needed
+        }));
+
+        // Send the data using Axios
+        axios.post(flaskAppUrl, formattedData, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => {
+            if (response.status === 200) {
+                console.log('Logs successfully sent to the server:', response.data);
+            } else {
+                console.error('Failed to send logs to the server.');
+            }
+        })
+        .catch(error => {
+            console.error('Error sending logs to the server:', error);
+        });
+    });
+}
+
+// Add a listener for a message from the popup to trigger actions
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "downloadLogs") {
         downloadLogs();
         sendResponse({ status: "Downloading JSON log..." });
+    } else if (request.action === "sendLogsToServer") {
+        sendLogsToServer();
+        sendResponse({ status: "Sending logs to the server..." });
     }
 });
