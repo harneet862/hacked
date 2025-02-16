@@ -1,10 +1,14 @@
+# Ignore virtual environment files
 .myenv
+
+# Ignore Gemini API key file
 .env
-# Ignore credential/token files
+
+# Ignore credential/token files from Google Calendar API/ OAuth2
 credentials.json
 token.json
 
-# Ignore SSL/TLS certificate and key files
+# Ignore SSL/TLS certificate and key files (kind of irrelevant rn)
 *.pem
 *.crt
 *.key
