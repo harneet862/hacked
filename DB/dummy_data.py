@@ -20,18 +20,35 @@ def insert_dummy_data():
     ''', users)
 
     # Insert Visited Data
-    categories = ['Education', 'News', 'Social Media', 'Entertainment', 'Shopping', 'Health', 'Technology']
+    categories = ['Productivity', 
+                'Education', 
+                'Fitness', 
+                'Entertainment', 
+                'Social Media', 
+                'Blogging', 
+                'News', 
+                'Travel',
+                'Other']
     base_date = datetime(2023, 10, 1)
     visited = []
     
     for uid in range(1, 6):  # 5 users
-        for _ in range(50):  # 50 entries per user
+        entries = 500 if uid == 1 else 50  # 500 entries for user 1, 50 for others
+        for _ in range(entries):
             date = base_date + timedelta(days=random.randint(0, 30))
-            start_time = datetime.combine(date, datetime.min.time()) + timedelta(hours=random.randint(6, 22), minutes=random.randint(0, 59))
+            start_time = datetime.combine(date, datetime.min.time()) + timedelta(
+                hours=random.randint(6, 22), minutes=random.randint(0, 59))
             end_time = start_time + timedelta(minutes=random.randint(5, 60))
             category = random.choice(categories)
             url = f'https://example{random.randint(1, 100)}.com'
-            visited.append((uid, url, start_time.strftime('%Y-%m-%d %H:%M:%S'), end_time.strftime('%Y-%m-%d %H:%M:%S'), date.strftime('%Y-%m-%d'), category))
+            visited.append((
+                uid, 
+                url, 
+                start_time.strftime('%Y-%m-%d %H:%M:%S'), 
+                end_time.strftime('%Y-%m-%d %H:%M:%S'), 
+                date.strftime('%Y-%m-%d'), 
+                category
+            ))
     
     cursor.executemany('''
         INSERT INTO Visited (UID, URL, StartTime, EndTime, Date, Category)
