@@ -21,3 +21,5 @@ def get_gemini_response(title, description):
     answer = response.candidates[0].content.parts[0].text.strip()
     return answer
 
+
+print(get_gemini_response(title="breakfast", description="egss"))
