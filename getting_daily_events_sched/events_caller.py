@@ -104,7 +104,7 @@ def main():
       start_formatted = start_dt.strftime(f"%B %d, %Y @ %H:%M {tz_name}")
       end_formatted = end_dt.strftime(f"%B %d, %Y @ %H:%M {tz_name}")
 
-      print(f"Start Time: {start_formatted} End Time: {end_formatted} Event Title: {event["summary"]}")
+      print(f"Start Time: {start_formatted} End Time: {end_formatted} Event Title: {event['summary']}")
 
   except HttpError as error:
     print(f"An error occurred: {error}")
