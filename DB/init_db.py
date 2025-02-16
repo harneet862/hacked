@@ -11,20 +11,16 @@ def init_db():
     # Create Users table
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS Users (
-            ID INTEGER PRIMARY KEY AUTOINCREMENT,
             FirstName TEXT NOT NULL,
             LastName TEXT NOT NULL,
-            Email TEXT NOT NULL,
-            GoogleID TEXT NOT NULL UNIQUE,
-            DOB TEXT,
+            GoogleID TEXT NOT NULL PRIMARY KEY,
             CONSTRAINT email_unique UNIQUE (Email)
         )
     ''')
     
     # Create Visited table with category enum constraint
     cursor.execute('''
-        CREATE TABLE IF NOT EXISTS Visited (
-            UID INTEGER NOT NULL,
+        CREATE TABLE IF NOT EXISTS Actual (
             URL TEXT NOT NULL,
             StartTime TEXT NOT NULL,
             EndTime TEXT NOT NULL,
@@ -40,10 +36,28 @@ def init_db():
                 'Travel',
                 'Other'
             )),
-            FOREIGN KEY (UID) REFERENCES Users(ID)
         )
     ''')
     
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS Expected (
+            EVENT_TITLE TEXT NOT NULL,
+            StartTime TEXT NOT NULL,
+            EndTime TEXT NOT NULL,
+            Date TEXT NOT NULL,
+            Category TEXT CHECK(Category IN (
+                'Productivity', 
+                'Education', 
+                'Fitness', 
+                'Entertainment', 
+                'Social Media', 
+                'Blogging', 
+                'News', 
+                'Travel',
+                'Other'
+            )),
+        )
+    ''')
     # Commit changes and close connection
     conn.commit()
     conn.close()
