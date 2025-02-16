@@ -56,11 +56,15 @@ def handle_frontend_data():
     return jsonify({"message": "Data from frontend received successfully"}), 200
 
 # this method will be used to send info from the backend to the frontend
-@app.route('/api/total_time_each_category', methods=['GET'])
+@app.route('/api/expectedvsactual', methods=['GET'])
 def send_data():
+    event_date = date.today()
+    DB.db_functions.get_user_expected(event_date)
+    # this should provide me with a set which has the values which are events which would be start_time, end_time, title, date
+    
     # so far we decided to send the info 
     # total info per day
-    today = date.today()
+    
     DB.db_functions.get_total_time_per_category_per_day(today)
     return jsonify()
 
