@@ -1,14 +1,16 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from api import get_gemini_response
+from api import get_gemini_response_category
+from api import get_gemini_response_bool
+from datetime import datetime, timedelta
+from dateutil.parser import parse
 #from ..DB import db_functions
 import os
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import DB.db_functions
 from datetime import date
-import uuid
-
+import datetime 
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all domains on all routes
@@ -37,7 +39,7 @@ def handle_chrome_extension_data():
     end_time = data.get('end_time')
     title = data.get('title')
     des = data.get('description')
-    category = get_gemini_response(title, des)
+    category = get_gemini_response_category(title, des)
     url = data.get('url')
     DB.db_functions.insert_visited(url,start_time,end_time,date,category)
     print("Received data from Chrome extension:", data)
@@ -59,15 +61,68 @@ def handle_frontend_data():
 @app.route('/api/expectedvsactual', methods=['GET'])
 def send_data():
     event_date = date.today()
-    ans = DB.db_functions.get_user_expected(event_date)
-    # this should provide me with a set which has the values which are events which would be start_time, end_time, title, date
-    for i in ans:
-        if 
+    expected = DB.db_functions.get_user_expected(str(event_date))  # Expected format: (title, start_time, end_time, date, category)
+    actual = DB.db_functions.get_actual_expected(str(event_date))  # Actual format: (url, title, start_time, end_time, date, category)
+    
+    data = {"arr": []}
+    
+    for i in expected:
+        proportion = 0
+        i = list(i)
+        
+        start_time = i[1]
+        end_time = i[2]
+        
+        # Convert to datetime objects to calculate time difference
+        start_time_object = datetime.strptime(start_time, "%H:%M")
+        end_time_object = datetime.strptime(end_time, "%H:%M")
+        
+        # Time given as total expected duration
+        time_given = end_time_object - start_time_object
+        total_seconds_given = time_given.total_seconds()
+
+        for j in actual:
+            j = list(j)
+            actual_start = j[2]
+            actual_end = j[3]
+            
+            # Convert actual times to datetime objects as well
+            actual_start_object = datetime.strptime(actual_start, "%H:%M")
+            actual_end_object = datetime.strptime(actual_end, "%H:%M")
+            
+            # Check for overlapping times between expected and actual times
+            if (actual_start_object >= start_time_object and actual_end_object <= end_time_object) or \
+               (actual_end_object <= end_time_object and actual_end_object >= start_time_object) or \
+               (actual_start_object >= start_time_object and actual_start_object <= end_time_object):
+                
+                # Calculate actual time spent for overlapping segments
+                overlap_start = max(start_time_object, actual_start_object)
+                overlap_end = min(end_time_object, actual_end_object)
+                
+                actual_time = overlap_end - overlap_start
+                total_seconds_actual = actual_time.total_seconds()
+                
+                # Calculate proportion of time spent
+                proportion += total_seconds_actual / total_seconds_given
+
+        # Store the proportion for this event
+        data["arr"].append({
+            "start_time": start_time,
+            "end_time": end_time,
+            "proportion": proportion,
+            "title": i[0]
+        })
+    
+    return data
+                
+
+
+        
     # so far we decided to send the info 
     # total info per day
     
-    DB.db_functions.get_total_time_per_category_per_day(today)
-    return jsonify()
+    # DB.db_functions.get_total_time_per_category_per_day(today)
+    # return jsonify()
 
     
 
