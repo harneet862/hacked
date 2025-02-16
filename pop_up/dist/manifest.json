@@ -1,0 +1,23 @@
+{
+    "manifest_version": 3,
+    "name": "RoutineRadar",
+    "description": "The time spent on the website",
+    "version": "1.0",
+    "permissions": [
+        "storage",
+        "tabs",
+        "activeTab"
+    ],
+    "host_permissions": [
+        "http://127.0.0.1:5000/"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["axios.min.js", "background.js"]
+        }
+    ]
+}
