@@ -2,6 +2,7 @@ import datetime
 import os.path
 import zoneinfo
 import requests
+import pytz
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -10,7 +11,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 # If modifying these scopes, delete the file token.json.
-SCOPES = ["https://www.googleapis.com/auth/calendar.events.readonly"]
+SCOPES = ["https://www.googleapis.com/auth/calendar.events.readonly", "https://www.googleapis.com/auth/calendar"]
 
 
 def main():
@@ -38,16 +39,21 @@ def main():
 
     # Call the Calendar API
 
-    # Get current time in UTC, timezone aware
-    now = datetime.datetime.now(datetime.timezone.utc) 
+    # Get the calendar's timezone (e.g., 'America/Edmonton' for GMT-07:00)
+    calendar = service.calendars().get(calendarId="primary").execute()
+    calendar_timezone = calendar.get("timeZone", "UTC")
 
-    # Set timeMin to the start of the current day in UTC
+    # Get current time in the calendar's timezone
+    tz = pytz.timezone(calendar_timezone)
+    now = datetime.datetime.now(tz)
+
+    # Set timeMin to the start of the current day in the calendar's timezone
     start_of_day = now.replace(hour=0, minute=0, second=0, microsecond=0).isoformat()
-    # Set timeMax to the start of the NEXT day in UTC
-    end_of_day = (now.replace(hour=0, minute=0, second=0, microsecond=0) + datetime.timedelta(days=1)).isoformat()
+    # Set timeMax to the end of the current day in the calendar's timezone
+    end_of_day = now.replace(hour=23, minute=59, second=59, microsecond=999999).isoformat()
 
-    print(start_of_day)
-    print(end_of_day)
+    print(f"Start of Day: {start_of_day}")
+    print(f"End of Day: {end_of_day}")
 
     print("Getting the events for the current day...")
 
@@ -105,8 +111,8 @@ def main():
       date_formatted = start_dt.strftime("%B %d, %Y")
 
       # Format the output string in 24-Hour format (e.g. "February 16, 2025 @ 18:00 MST")
-      start_formatted = start_dt.strftime("%H:%M") +f" {tz_name}"
-      end_formatted = end_dt.strftime("%H:%M") +f" {tz_name}"
+      start_formatted = start_dt.strftime("%H:%M") 
+      end_formatted = end_dt.strftime("%H:%M") 
 
       # print(f"Start Time: {start_formatted} End Time: {end_formatted} Event Title: {event['summary']}")
 
@@ -118,17 +124,17 @@ def main():
           "title": event["summary"]
       })
 
-    print(event_data)
+    # print(event_data)
     # Send the event data to the Flask server
-    url = "http://127.0.0.1:5000/calendar"  # TODO: CHECK THAT THIS IS CORRECT
-    response = requests.post(url, json=event_data)
+    # url = "http://127.0.0.1:5000/calendar"  # TODO: CHECK THAT THIS IS CORRECT
+    # response = requests.post(url, json=event_data)
 
-    # Check the response from the server
-    if response.status_code == 200:
-        print("Event data successfully sent to the Flask server.")
-    else:
-        print(f"Failed to send event data. Status code: {response.status_code}")
-        print(f"Response: {response.text}")
+    # # Check the response from the server
+    # if response.status_code == 200:
+    #     print("Event data successfully sent to the Flask server.")
+    # else:
+    #     print(f"Failed to send event data. Status code: {response.status_code}")
+    #     print(f"Response: {response.text}")
 
   except HttpError as error:
     print(f"An error occurred: {error}")
