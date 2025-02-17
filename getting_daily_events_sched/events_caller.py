@@ -1,6 +1,5 @@
 import datetime
 import os.path
-import zoneinfo
 import requests
 import pytz
 
