@@ -62,7 +62,7 @@ function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-800 p-8">
+    <div className="min-h-screen bg-[#0D1821] p-8">
       <div className="w-8/12 mx-auto mb-10">
       <TimeComparison data={data}/>
       </div>
