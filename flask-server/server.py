@@ -37,14 +37,19 @@ def handle_chrome_extension_data():
     # here the data will be a python dict and the keys we have are 
     # date, start_time, end_time, title and description
     # Process Chrome extension data
+    data = data['Log stored']
     date = data.get('date')
-    start_time = data.get('start_time')
-    end_time = data.get('end_time')
+    start_time = data.get('startTime')
+    time_obj = datetime.strptime(start_time, "%H:%M:%S")
+    formattedStartTime = time_obj.strftime("%H:%M")
+    end_time = data.get('endTime')
+    time_obj = datetime.strptime(end_time, "%H:%M:%S")
+    formattedendTime = time_obj.strftime("%H:%M")
     title = data.get('title')
     des = data.get('description')
     category = get_gemini_response_category(title, des)
     url = data.get('url')
-    DB.db_functions.insert_visited(url,start_time,end_time,date,category)
+    DB.db_functions.insert_visited(url,formattedStartTime,formattedendTime,date,category)
     print("Received data from Chrome extension:", data)
     return jsonify({"message": "Data from Chrome extension received successfully"}), 200
 
