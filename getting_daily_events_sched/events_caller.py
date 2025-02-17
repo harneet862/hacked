@@ -1,6 +1,5 @@
 import datetime
 import os.path
-import zoneinfo
 import requests
 import pytz
 
@@ -13,12 +12,11 @@ from googleapiclient.errors import HttpError
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/calendar.events.readonly", "https://www.googleapis.com/auth/calendar"]
 
-
-def main():
+def get_credentials():
+    # The file token.json stores the user's access and refresh tokens, and is
+    # created automatically when the authorization flow completes for the first
+    # time.
   creds = None
-  # The file token.json stores the user's access and refresh tokens, and is
-  # created automatically when the authorization flow completes for the first
-  # time.
   if os.path.exists("token.json"):
     creds = Credentials.from_authorized_user_file("token.json", SCOPES)
   # If there are no (valid) credentials available, let the user log in.
@@ -30,10 +28,14 @@ def main():
           "credentials.json", SCOPES
       )
       creds = flow.run_local_server(port=5000)
-    # Save the credentials for the next run
+  return creds
+
+def save_credentials(creds):
+    # Save the credentials for the next run in token.json
     with open("token.json", "w") as token:
       token.write(creds.to_json())
 
+def get_scheduled_events(creds):
   try:
     service = build("calendar", "v3", credentials=creds)
 
@@ -52,10 +54,10 @@ def main():
     # Set timeMax to the end of the current day in the calendar's timezone
     end_of_day = now.replace(hour=23, minute=59, second=59, microsecond=999999).isoformat()
 
-    print(f"Start of Day: {start_of_day}")
-    print(f"End of Day: {end_of_day}")
+    # print(f"Start of Day: {start_of_day}")
+    # print(f"End of Day: {end_of_day}")
 
-    print("Getting the events for the current day...")
+    # print("Getting the events for the current day...")
 
     # Initialize variables for handling pagination
     events = []
@@ -82,7 +84,7 @@ def main():
       page_token = events_result.get("nextPageToken")
       
       # Debugging: Print the page token
-      print(f"Next Page Token: {page_token}")
+      # print(f"Next Page Token: {page_token}")
             
       if not page_token:
         break # Exit the loop if there are no more pages
@@ -95,7 +97,7 @@ def main():
     event_data = []
     
     # Prints the start, end, name of all events for today
-    print(f"Events collected in events list: {len(events)}") # Debugging: Checking how many events in collected from Cal
+    # print(f"Events collected in events list: {len(events)}") # Debugging: Checking how many events in collected from Cal
     for event in events:
       start = event["start"].get("dateTime", event["start"].get("date")) # trying to get datetime, if N/A then gets date
       end = event["end"].get("dateTime", event["start"].get("date"))
@@ -123,22 +125,35 @@ def main():
           "end_time": end_formatted,
           "title": event["summary"]
       })
-
-    # print(event_data)
-    # Send the event data to the Flask server
-    # url = "http://127.0.0.1:5000/calendar"  # TODO: CHECK THAT THIS IS CORRECT
-    # response = requests.post(url, json=event_data)
-
-    # # Check the response from the server
-    # if response.status_code == 200:
-    #     print("Event data successfully sent to the Flask server.")
-    # else:
-    #     print(f"Failed to send event data. Status code: {response.status_code}")
-    #     print(f"Response: {response.text}")
-
+    return event_data
   except HttpError as error:
     print(f"An error occurred: {error}")
 
+def send_event_data_to_server(event_data):
+  # Send the event data to the Flask server
+  url = "http://127.0.0.1:5000/calendar"  # TODO: CHECK THAT THIS IS CORRECT
+  response = requests.post(url, json=event_data)
 
+  # Check the response from the server
+  if response.status_code == 200:
+      print("Event data successfully sent to the Flask server.")
+  else:
+      print(f"Failed to send event data. Status code: {response.status_code}")
+      print(f"Response: {response.text}")
+  return
+
+def run_events_caller():
+  creds = get_credentials()
+  save_credentials(creds)
+
+  event_data = get_scheduled_events(creds)
+  send_event_data_to_server(event_data)
+  
+  return
+
+def main():
+  run_events_caller()
+  return
+  
 if __name__ == "__main__":
   main()
