@@ -1,4 +1,5 @@
-from flask import Flask, request, jsonify
+import subprocess
+from flask import Flask, request, jsonify, redirect
 from flask_cors import CORS
 from api import get_gemini_response_category
 from api import get_gemini_response_bool
@@ -18,6 +19,17 @@ user_lname = "Brar"
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all domains on all routes
 
+@app.route('/trigger-events-caller', methods=['GET'])
+def trigger_events():
+    """
+    This endpoint triggers the Google OAuth login flow by running events_caller.py.
+    Instead of redirecting, it returns a JSON response with an exit status.
+    """
+    try:
+        subprocess.run(["python", "events_caller.py"], check=True)
+        return jsonify({"status": 0, "message": "Google login successful"}), 200
+    except subprocess.CalledProcessError:
+        return jsonify({"status": 1, "message": "Google login failed"}), 500
 
 @app.route('/calendar', methods=['POST'])
 def create_expected_data():
