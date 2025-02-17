@@ -3,7 +3,7 @@ from flask_cors import CORS
 from api import get_gemini_response_category
 from api import get_gemini_response_bool
 from datetime import datetime, timedelta
-from dateutil.parser import parse
+#from dateutil.parser import parse
 #from ..DB import db_functions
 import os
 import sys
@@ -11,6 +11,8 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import DB.db_functions
 from datetime import date
 import datetime 
+import subprocess
+from events_caller import googleoath
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all domains on all routes
@@ -56,6 +58,21 @@ def handle_frontend_data():
     DB.db_functions.insert_user(Fname, Lname, gid, DOB) # I changed this bcz we need to store the uid with the user info as well
     print("Received data from frontend:", data)
     return jsonify({"message": "Data from frontend received successfully"}), 200
+
+@app.route('/api/trigger-events-caller', methods=['GET'])
+def trigger_events():
+    """
+    This endpoint triggers the Google OAuth login flow by running events_caller.py.
+    Instead of redirecting, it returns a JSON response with an exit status.
+    """
+    try:
+        googleoath()
+        # subprocess.run(["python", "events_caller.py"], check=True)
+        return jsonify({"status": 0, "message": "Google login successful"}), 200
+    #except subprocess.CalledProcessError:
+       # return jsonify({"status": 1, "message": "Google login failed"}), 500
+    except Exception as e:
+       return jsonify({"status": 1, "message": f"Google login failed: {str(e)}"}), 500
 
 # this method will be used to send info from the backend to the frontend
 @app.route('/api/expectedvsactual', methods=['GET'])
