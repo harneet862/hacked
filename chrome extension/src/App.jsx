@@ -1,6 +1,7 @@
 import Prod from './components/Prod';
 import TimeChart from './components/TimeChart';
 import TimeComparison from './components/TimeComparison';
+import Header from './components/Header';
 
 function App() {
   const websites = [
@@ -63,6 +64,10 @@ function App() {
 
   return (
     <div className="min-h-screen bg-[#0D1821] p-8">
+      <div className="w-8/12 mx-auto mb-10">
+      <Header />
+      </div>
+      
       <div className="w-8/12 mx-auto mb-10">
       <TimeComparison data={data}/>
       </div>
