@@ -36,7 +36,8 @@ def create_expected_data():
         DB.db_functions.insert_expected(start_time, end_time, title, date)
     print("Received data from calendar")
     return jsonify({"message": "Data from calendar received successfully"}), 200
-    
+
+# this one is working    
 @app.route('/api/chrome_extension/insertvalue', methods=['POST'])
 def handle_chrome_extension_data():
     print("ok",request.data)
@@ -45,11 +46,6 @@ def handle_chrome_extension_data():
     # here the data will be a python dict and the keys we have are 
     # date, start_time, end_time, title and description
     # Process Chrome extension data
-    print(data)
-
-
-    # data = data['Log stored']
-
     if data is None:
         return jsonify({"error": "'Log stored' key not found in the data"}), 400
     date = data.get('date')
@@ -75,7 +71,7 @@ def handle_frontend_data():
     Fname = data.get('FirstName')
     Lname = data.get('LastName') 
     gid = data.get('GoogleID') #make it a unique identifier
-    DB.db_functions.insert_user(Fname, Lname, gid) # I changed this bcz we need to store the uid with the user info as well
+    DB.db_functions.insert_user(cursor, Fname, Lname, gid) # I changed this bcz we need to store the uid with the user info as well
     print("Received data from frontend:", data)
     return jsonify({"message": "Data from frontend received successfully"}), 200
 

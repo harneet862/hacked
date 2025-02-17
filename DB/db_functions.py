@@ -19,6 +19,7 @@ def insert_actual(cursor, url, title, start_time, end_time, date, category):
         cursor.execute(query, (url, title, start_time, end_time, date, category))
     except sqlite3.IntegrityError as e:
         print(f"Error inserting visited entry: {e}")
+    
 
 def insert_expected(cursor, title, start_time, end_time, date, category):
     query = """
