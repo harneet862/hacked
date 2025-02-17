@@ -2,22 +2,28 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from api import get_gemini_response_category
 from api import get_gemini_response_bool
-from datetime import datetime, timedelta
-from dateutil.parser import parse
+# from datetime import datetime, timedelta
+#from dateutil.parser import parse
 #from ..DB import db_functions
+import datetime
 import os
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import DB.db_functions
 from datetime import date
 import datetime 
-
+import sqlite3
+conn = sqlite3.connect('../DB/extension_db.db', check_same_thread=False)
+cursor = conn.cursor()
 user_Fname = "Karan"
 user_lname = "Brar"
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all domains on all routes
 
+@app.route('/')
+def new():
+    return "Hello World"
 
 @app.route('/calendar', methods=['POST'])
 def create_expected_data():
@@ -33,23 +39,32 @@ def create_expected_data():
     
 @app.route('/api/chrome_extension/insertvalue', methods=['POST'])
 def handle_chrome_extension_data():
+    print("ok",request.data)
+    
     data = request.get_json()
     # here the data will be a python dict and the keys we have are 
     # date, start_time, end_time, title and description
     # Process Chrome extension data
-    data = data['Log stored']
+    print(data)
+
+
+    # data = data['Log stored']
+
+    if data is None:
+        return jsonify({"error": "'Log stored' key not found in the data"}), 400
     date = data.get('date')
     start_time = data.get('startTime')
-    time_obj = datetime.strptime(start_time, "%H:%M:%S")
+    time_obj = datetime.datetime.strptime(str(start_time), "%H:%M:%S")
     formattedStartTime = time_obj.strftime("%H:%M")
     end_time = data.get('endTime')
-    time_obj = datetime.strptime(end_time, "%H:%M:%S")
+    time_obj = datetime.datetime.strptime(str(end_time), "%H:%M:%S")
     formattedendTime = time_obj.strftime("%H:%M")
     title = data.get('title')
     des = data.get('description')
     category = get_gemini_response_category(title, des)
     url = data.get('url')
-    DB.db_functions.insert_visited(url,formattedStartTime,formattedendTime,date,category)
+    DB.db_functions.insert_actual(cursor, url, title, formattedStartTime,formattedendTime,date,category)
+    conn.commit()
     print("Received data from Chrome extension:", data)
     return jsonify({"message": "Data from Chrome extension received successfully"}), 200
 
@@ -125,7 +140,7 @@ def send_data():
                 
 
 @app.route('/api/getusername', methods=['GET'])
-def send_data():
+def send_name():
     return (user_Fname, user_lname)
 
 
