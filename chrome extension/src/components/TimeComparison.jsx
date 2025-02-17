@@ -1,7 +1,26 @@
 import React from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
-const TimeComparison = ({ data }) => {
+const TimeComparison = () => {
+  const [data, setData] = useState([]);
+  
   const parseTime = (time) => new Date(time).getTime();
+
+  // Fetch data on component mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('/api/frontendata');  // Adjust endpoint if necessary
+        console.log(response.data);
+        setData(response.data.arr);  // Update state with fetched data
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);  // Empty dependency array ensures this runs once when the component mounts
 
   // Fixed timeline from 12 AM to 11 PM
   const getDayStart = (time) => {
