@@ -12,11 +12,8 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import DB.db_functions
 from datetime import date
 import datetime 
-import sqlite3
-conn = sqlite3.connect('../DB/extension_db.db', check_same_thread=False)
-cursor = conn.cursor()
-user_Fname = "Karan"
-user_lname = "Brar"
+import subprocess
+from events_caller import googleoath
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all domains on all routes
@@ -79,7 +76,7 @@ def handle_frontend_data():
     print("Received data from frontend:", data)
     return jsonify({"message": "Data from frontend received successfully"}), 200
 
-# this method will be used to send info from the backend to the frontend for rendering the calendar data 
+# this method will be used to send info from the backend to the frontend
 @app.route('/api/expectedvsactual', methods=['GET'])
 def send_data():
     event_date = date.today()
