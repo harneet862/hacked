@@ -13,12 +13,11 @@ def init_db():
         CREATE TABLE IF NOT EXISTS Users (
             FirstName TEXT NOT NULL,
             LastName TEXT NOT NULL,
-            GoogleID TEXT NOT NULL PRIMARY KEY,
-            CONSTRAINT email_unique UNIQUE (Email)
+            GoogleID TEXT NOT NULL PRIMARY KEY
         )
     ''')
     
-    # Create Visited table with category enum constraint
+    # Create Actual table
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS Actual (
             URL TEXT NOT NULL,
@@ -36,10 +35,11 @@ def init_db():
                 'News', 
                 'Travel',
                 'Other'
-            )),
+            )) NOT NULL
         )
     ''')
     
+    # Create Expected table
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS Expected (
             EVENT_TITLE TEXT NOT NULL,
@@ -56,9 +56,10 @@ def init_db():
                 'News', 
                 'Travel',
                 'Other'
-            )),
+            )) NOT NULL
         )
     ''')
+
     # Commit changes and close connection
     conn.commit()
     conn.close()
