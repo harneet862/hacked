@@ -1,46 +1,46 @@
 # RoutineRadar
 
-# Inspiration
-The inspiration for RoutineRadar comes from the common struggle that students face in managing their time effectively. With so many tasks to juggle, it's easy to fall off a carefully planned schedule. Often, we look back at the end of the day and wonder where the time went, realizing that we didn't complete everything we had intended to. RoutineRadar was designed to help students stay aligned with their schedules by tracking their online activities and visually showing how well they stuck to their plans. It serves as a helpful tool to bridge the gap between intention and action, offering clarity and insights into time management.
-
 # What it does
-RoutineRadar is a Google Chrome extension that tracks your online activities throughout the day and compares them to the schedule you set for yourself. The web app then visualizes how much time you adhered to the plan.
+RoutineRadar is a Google Chrome extension that tracks your online activities throughout the day and compares them to the schedule you set for yourself in your Google Calendar. The web app then visualizes how much time you stuck to the plan.
 Here’s the unique feature: the schedule shown in the web app is color-coded. The events are represented by color bars where:
 * The time you actually spent on a task is shown in blue color (indicating that you stayed on track).
 * The rest of the schedule (where you didn't match the expected time) is greyed out.
+
+*Think of it like a progress bar or your phone's battery percentage status icon.*
+
 This simple but powerful visual cue helps you immediately see which parts of your day were successful and which ones need improvement, allowing you to reflect on your time management habits.
 
 # How we built it?
-We developed Routine Radar as a Chrome extension and a web app to track time spent on active browser tabs and analyze scheduling inconsistencies.
-* Chrome Extension:
+We developed Routine Radar as a Chrome extension and a web app to __track time__ spent on __active browser tabs__ and analyze scheduling inconsistencies.
+### Chrome Extension:
 Tracks all active tabs and records time spent on each.
 Built using HTML, CSS, and JavaScript for the frontend.
 
-* Web App:
+### Web App:
 Built with Flask (backend) and React + TailwindCSS (frontend).
 Displays user insights and analytics on their time usage.
 
-* Google Calendar Integration:
+### Google Calendar Integration:
 Uses the Google Calendar API to fetch scheduled events.
 Implements OAuth authentication for secure user sign-in.
 
-* Database:
+### Database:
 SQLite stores user data, including expected and actual schedules.
 
 # Challenges we ran into
-* Tracking Active Tabs Accurately:
+### Tracking Active Tabs Accurately:
 Detecting and logging time spent on tabs required handling multiple edge cases, such as inactive windows and switching between tabs.
 
-* Google Calendar API Integration:
-Setting up OAuth authentication was tricky, especially managing token expiration and ensuring a smooth login experience.
+### Google Calendar API Integration:
+Setting up OAuth authentication was tricky. Since it was our first time working with OAuth modules, a lot of time was spent on debugging, talking with mentors, and StackOverflowing to figure out how to correctly authenticate the user.
 
-* Syncing Data Between the Extension and Web App:
+### Syncing Data Between the Extension and Web App:
 Ensuring real-time updates between the Chrome extension and the Flask backend while keeping API calls efficient.
 
-* Frontend Consistency:
+### Frontend Consistency:
 Maintaining a uniform UI/UX across the Chrome extension and React web app while dealing with different styling constraints.
 
-* Database Management in SQLite:
+### Database Management in SQLite:
 Structuring data efficiently to store and compare expected vs. actual schedules without performance bottlenecks.
 
 # Accompolishments we are proud of 
