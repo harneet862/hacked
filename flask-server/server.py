@@ -40,20 +40,20 @@ def create_expected_data():
     
 @app.route('/api/chrome_extension/insertvalue', methods=['POST'])
 def handle_chrome_extension_data():
-    data = request.get_json()
-    # here the data will be a python dict and the keys we have are 
-    # date, start_time, end_time, title and description
-    # Process Chrome extension data
-    date = data.get('date')
-    start_time = data.get('start_time')
-    end_time = data.get('end_time')
-    title = data.get('title')
-    des = data.get('description')
-    category = get_gemini_response_category(title, des)
-    url = data.get('url')
-    DB.db_functions.insert_actual(cursor, url,title , start_time,end_time,date,category)
-    connection.commit()
-    print("Received data from Chrome extension:", data)
+    # data = request.get_json()
+    # # here the data will be a python dict and the keys we have are 
+    # # date, start_time, end_time, title and description
+    # # Process Chrome extension data
+    # date = data.get('date')
+    # start_time = data.get('start_time')
+    # end_time = data.get('end_time')
+    # title = data.get('title')
+    # des = data.get('description')
+    # category = get_gemini_response_category(title, des)
+    # url = data.get('url')
+    # DB.db_functions.insert_actual(cursor, url,title , start_time,end_time,date,category)
+    # connection.commit()
+    # print("Received data from Chrome extension:", data)
     return jsonify({"message": "Data from Chrome extension received successfully"}), 200
 
 @app.route('/api/frontend/insert_user', methods=['POST'])
