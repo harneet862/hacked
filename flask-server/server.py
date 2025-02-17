@@ -55,8 +55,7 @@ def handle_frontend_data():
     Fname = data.get('FirstName')
     Lname = data.get('LastName') 
     gid = data.get('GoogleID') #make it a unique identifier
-    DOB = data.get('DOB') # I dont think we need this 
-    DB.db_functions.insert_user(Fname, Lname, gid, DOB) # I changed this bcz we need to store the uid with the user info as well
+    DB.db_functions.insert_user(Fname, Lname, gid) # I changed this bcz we need to store the uid with the user info as well
     print("Received data from frontend:", data)
     return jsonify({"message": "Data from frontend received successfully"}), 200
 
