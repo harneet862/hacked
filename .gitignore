@@ -1,0 +1,21 @@
+# Ignore virtual environment files
+.myenv
+
+# Ignore Gemini API key file
+.env
+
+# Ignore credential/token files from Google Calendar API/ OAuth2
+credentials.json
+token.json
+
+# Ignore SSL/TLS certificate and key files (kind of irrelevant rn)
+*.pem
+*.crt
+*.key
+*.csr
+*.p12
+
+# Ignore Python cache and virtual environment directories
+__pycache__/
+*.pyc
+venv/
