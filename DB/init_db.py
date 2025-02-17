@@ -13,8 +13,7 @@ def init_db():
         CREATE TABLE IF NOT EXISTS Users (
             FirstName TEXT NOT NULL,
             LastName TEXT NOT NULL,
-            GoogleID TEXT NOT NULL PRIMARY KEY,
-            CONSTRAINT email_unique UNIQUE (Email)
+            GoogleID TEXT NOT NULL PRIMARY KEY
         )
     ''')
     
@@ -36,7 +35,7 @@ def init_db():
                 'News', 
                 'Travel',
                 'Other'
-            )),
+            ))
         )
     ''')
     
@@ -56,7 +55,7 @@ def init_db():
                 'News', 
                 'Travel',
                 'Other'
-            )),
+            ))
         )
     ''')
     # Commit changes and close connection
