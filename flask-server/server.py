@@ -13,6 +13,11 @@ from datetime import date
 import datetime 
 import subprocess
 from events_caller import googleoath
+import sqlite3
+
+db_path =  "./extension_db.db"
+connection = sqlite3.connect(db_path, check_same_thread = False)
+cursor = connection.cursor()
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all domains on all routes
@@ -21,12 +26,15 @@ CORS(app)  # Enable CORS for all domains on all routes
 @app.route('/calendar', methods=['POST'])
 def create_expected_data():
     data = request.get_json()
+    # print("hello friends", data)
     for i in data:
-        start_time = i.get('start_time')
+        start_time = i.get("start_time")
         end_time = i.get('end_time')
         title = i.get('title')
-        date = i.now()
-        DB.db_functions.insert_expected(start_time, end_time, title, date)
+        category="Social Media"
+        date = datetime.datetime.now().date()
+        DB.db_functions.insert_expected(cursor,title, start_time, end_time, date, category)
+        connection.commit()
     print("Received data from calendar")
     return jsonify({"message": "Data from calendar received successfully"}), 200
     
@@ -43,7 +51,8 @@ def handle_chrome_extension_data():
     des = data.get('description')
     category = get_gemini_response_category(title, des)
     url = data.get('url')
-    DB.db_functions.insert_visited(url,start_time,end_time,date,category)
+    DB.db_functions.insert_actual(cursor, url,title , start_time,end_time,date,category)
+    connection.commit()
     print("Received data from Chrome extension:", data)
     return jsonify({"message": "Data from Chrome extension received successfully"}), 200
 
