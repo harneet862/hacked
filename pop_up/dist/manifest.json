@@ -6,23 +6,25 @@
     "permissions": [
         "storage",
         "tabs",
-        "activeTab"
+        "activeTab",
+        "scripting"
     ],
-    "host_permissions": [
-        "http://127.0.0.1:5000/"
-    ],
+    "icons": {
+        "16": "icons/image2.png",
+        "48": "icons/image2.png",
+        "128": "icons/image2.png"
+      },
     "background": {
         "service_worker": "background.js"
     },
-    "content_scripts": [
-        {
-            "matches": ["<all_urls>"],
-            "js": ["axios.min.js", "background.js"]
-        }],
+
     "action": {
             "default_popup": "popup.html",
             "default_icon": {
               
             }
-        }
+        },
+    "host_permissions": [
+            "https://*/*", 
+            "http://*/*" ]
 }
