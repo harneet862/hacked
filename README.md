@@ -1,4 +1,4 @@
-# *RoutineRadar*
+# RoutineRadar
 
 # Inspiration
 The inspiration for RoutineRadar comes from the common struggle that students face in managing their time effectively. With so many tasks to juggle, it's easy to fall off a carefully planned schedule. Often, we look back at the end of the day and wonder where the time went, realizing that we didn't complete everything we had intended to. RoutineRadar was designed to help students stay aligned with their schedules by tracking their online activities and visually showing how well they stuck to their plans. It serves as a helpful tool to bridge the gap between intention and action, offering clarity and insights into time management.
