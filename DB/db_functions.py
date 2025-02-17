@@ -82,6 +82,14 @@ def get_total_time_per_website_per_week(cursor, date):
     cursor.execute(query, (date,))
     return cursor.fetchall()
 
+def get_user_expected(cursor, date):
+    query = """
+    SELECT * FROM Expected
+    WHERE Date = ?;
+    """
+    cursor.execute(query, (date,))
+    return cursor.fetchall()
+
 def main():
     db_path = "extension_db.db"
     connection = sqlite3.connect(db_path)

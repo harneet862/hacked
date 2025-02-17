@@ -14,6 +14,7 @@ import datetime
 import subprocess
 from events_caller import googleoath
 import sqlite3
+import random 
 
 db_path =  "./extension_db.db"
 connection = sqlite3.connect(db_path, check_same_thread = False)
@@ -150,8 +151,24 @@ def send_data():
     
     return data
                 
-
-
+@app.route('/api/frontendata', methods=['GET'])
+def send_data_front_end():
+    event_date = date.today()
+    expected = DB.db_functions.get_user_expected(cursor, str(event_date)) 
+    data = {"arr": []}
+    for i in expected:
+        i = list(i)
+        start_time = i[1]
+        end_time = i[2]
+        title = i[0]
+        data["arr"].append({
+            "start_time": start_time,
+            "end_time": end_time,
+            "proportion": random.random(),
+            "title": title
+        })
+    print(data)
+    return data
         
     # so far we decided to send the info 
     # total info per day
