@@ -6,18 +6,13 @@
     "permissions": [
         "storage",
         "tabs",
-        "activeTab"
-    ],
-    "host_permissions": [
-        "http://127.0.0.1:5000/"
+        "activeTab",
+        "scripting"
     ],
     "background": {
         "service_worker": "background.js"
     },
-    "content_scripts": [
-        {
-            "matches": ["<all_urls>"],
-            "js": ["axios.min.js", "background.js"]
-        }
-    ]
+    "host_permissions": [
+        "https://*/*", 
+        "http://*/*" ]
 }
