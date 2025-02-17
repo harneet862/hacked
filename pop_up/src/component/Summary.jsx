@@ -1,10 +1,23 @@
 import React from 'react';
 
-function Summary() {
+function Summary({ data }) {
   return (
     <div>
-      <h1>Hello, world!</h1>
-      
+      <h1>RoutineRadar</h1>
+      {data ? (
+        <div>
+          <h2>Website Summary</h2>
+          <ul>
+            {Object.entries(data).map(([category, time]) => (
+              <li key={category}>
+                {category}: {time} minutes
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <p>No data available.</p>
+      )}
     </div>
   );
 }
