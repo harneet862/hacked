@@ -12,6 +12,9 @@ import DB.db_functions
 from datetime import date
 import datetime 
 
+user_Fname = "Karan"
+user_lname = "Brar"
+
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all domains on all routes
 
@@ -52,12 +55,11 @@ def handle_frontend_data():
     Fname = data.get('FirstName')
     Lname = data.get('LastName') 
     gid = data.get('GoogleID') #make it a unique identifier
-    DOB = data.get('DOB') # I dont think we need this 
-    DB.db_functions.insert_user(Fname, Lname, gid, DOB) # I changed this bcz we need to store the uid with the user info as well
+    DB.db_functions.insert_user(Fname, Lname, gid) # I changed this bcz we need to store the uid with the user info as well
     print("Received data from frontend:", data)
     return jsonify({"message": "Data from frontend received successfully"}), 200
 
-# this method will be used to send info from the backend to the frontend
+# this method will be used to send info from the backend to the frontend for rendering the calendar data 
 @app.route('/api/expectedvsactual', methods=['GET'])
 def send_data():
     event_date = date.today()
@@ -96,14 +98,15 @@ def send_data():
                (actual_start_object >= start_time_object and actual_start_object <= end_time_object):
                 
                 # Calculate actual time spent for overlapping segments
-                overlap_start = max(start_time_object, actual_start_object)
-                overlap_end = min(end_time_object, actual_end_object)
-                
-                actual_time = overlap_end - overlap_start
-                total_seconds_actual = actual_time.total_seconds()
-                
-                # Calculate proportion of time spent
-                proportion += total_seconds_actual / total_seconds_given
+                if get_gemini_response_category(j[0], j[1], i[0]):    
+                    overlap_start = max(start_time_object, actual_start_object)
+                    overlap_end = min(end_time_object, actual_end_object)
+                    
+                    actual_time = overlap_end - overlap_start
+                    total_seconds_actual = actual_time.total_seconds()
+                    
+                    # Calculate proportion of time spent
+                    proportion += total_seconds_actual / total_seconds_given
 
         # Store the proportion for this event
         data["arr"].append({
@@ -116,15 +119,10 @@ def send_data():
     return data
                 
 
+@app.route('/api/getusername', methods=['GET'])
+def send_data():
+    return (user_Fname, user_lname)
 
-        
-    # so far we decided to send the info 
-    # total info per day
-    
-    # DB.db_functions.get_total_time_per_category_per_day(today)
-    # return jsonify()
-
-    
 
 if __name__ == "__main__":
     app.run(debug=True)
